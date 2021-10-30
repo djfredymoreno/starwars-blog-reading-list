@@ -13,7 +13,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					initial: "white"
 				}
 			],
-			person: []
+			persons: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -21,9 +21,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				getActions().changeColor(0, "green");
 			},
 			loadSomeData: () => {
-				fetch()
-					.then()
-					.then(data => setStore({ foo: data.bar }));
+				fetch("https://www.swapi.tech/api/people")
+					.then(data => {
+						//podemos poner mas lineas
+						return data.json(); //json necesita ir solo y depsues mas then
+					})
+					.then(info => {
+						console.log(info.results);
+						setStore({ persons: info.results });
+						//podemos introducir mas lineas
+					});
 			},
 			changeColor: (index, color) => {
 				//get the store
