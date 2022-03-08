@@ -1,25 +1,13 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			],
-			persons: []
+			persons: [],
+			planets: [],
+			starships: [],
+			favorites: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
 			loadSomeData: () => {
 				fetch("https://www.swapi.tech/api/people")
 					.then(data => {
@@ -27,24 +15,39 @@ const getState = ({ getStore, getActions, setStore }) => {
 						return data.json(); //json necesita ir solo y depsues mas then
 					})
 					.then(info => {
-						console.log(info.results);
 						setStore({ persons: info.results });
 						//podemos introducir mas lineas
 					});
 			},
-			changeColor: (index, color) => {
-				//get the store
+			loadPlanets: () => {
+				fetch("https://www.swapi.tech/api/planets")
+					.then(data => {
+						//podemos poner mas lineas
+						return data.json(); //json necesita ir solo y depsues mas then
+					})
+					.then(info => {
+						setStore({ planets: info.results });
+						//podemos introducir mas lineas
+					});
+			},
+			loadStarships: () => {
+				fetch("https://www.swapi.tech/api/starships")
+					.then(data => {
+						//podemos poner mas lineas
+						return data.json(); //json necesita ir solo y depsues mas then
+					})
+					.then(info => {
+						setStore({ starships: info.results });
+						//podemos introducir mas lineas
+					});
+			},
+			addFavorites: nameFavorite => {
 				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
+				if (!store.favorites.includes(nameFavorite)) {
+					setStore({ favorites: [...store.favorites, nameFavorite] });
+				} else {
+					setStore({ favorites: store.favorites.filter(item => item != nameFavorite) });
+				}
 			}
 		}
 	};
